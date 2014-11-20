@@ -1,0 +1,16 @@
+Metadata-Version: 1.0
+Name: scopus-spider
+Version: 0.1
+Summary: Search and scrape scopus database
+Home-page: UNKNOWN
+Author: Robert Vesco
+Author-email: rv_spam@hotmail.com
+License: MIT
+Description: scopus_spider
+        -------------
+        
+        To use, simply::
+        
+          Do this
+        
+Platform: UNKNOWN

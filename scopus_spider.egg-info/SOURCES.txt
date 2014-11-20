@@ -1,0 +1,15 @@
+MANIFEST.in
+README.rst
+setup.py
+scopus_spider/__init__.py
+scopus_spider/command_line.py
+scopus_spider/parsing.py
+scopus_spider.egg-info/PKG-INFO
+scopus_spider.egg-info/SOURCES.txt
+scopus_spider.egg-info/dependency_links.txt
+scopus_spider.egg-info/entry_points.txt
+scopus_spider.egg-info/not-zip-safe
+scopus_spider.egg-info/requires.txt
+scopus_spider.egg-info/top_level.txt
+scopus_spider/scraping/__init__.py
+scopus_spider/scraping/jokes.py

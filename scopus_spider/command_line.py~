@@ -1,0 +1,4 @@
+import scraping_spider
+
+def main():
+    print scraping_spider.joke2()

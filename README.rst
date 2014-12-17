@@ -1,6 +1,64 @@
+=============
 scopus_spider
--------------
+=============
 
-To use, simply::
+Usage:
+======
 
-  Do this
+scopus_spider [-D | -O] [-A | -I | -P] [-mcdrsabpoT] --config
+
+REQUIRED GENERAL OPTIONS
+========================
+
+-D::
+  The directory where configuration files will be read. If not set, then it will be the directory where the script was executed. Best to be explicit!
+-O::
+  The directory where files will be outputted. If not, set, then -D assumed.
+  
+SEARCH OPTIONS
+==============
+
+-A::
+  - Search for all works by an author
+  - Input: CSV file of au-id (scopus id) or command line argument
+  - Output: CSV file of works
+-I::
+  - Retrieve au-id of an author
+  - Inputs: CSV file of First and last name variations
+  - Outputs: CSV file of potential matches
+-P::
+  - Retrieve metadata, authors and references for a list of documents
+  - Inputs: CSV file of either pubmed-ids or eids
+  - Outputs: CSV files
+
+OPTIONS
+=======
+
+-m::
+    metadata (default): metadata of works (no co-authors)
+-c::
+  - coauthors: get coauthors
+-d::
+  - 2nd level coauthors
+-r::
+  - references: get references (only lead author)
+-s::
+  - references_authors: get authors for references
+-a::
+  - cited_by: get cited_by metadata
+-b::
+  - cited_by_authors: get authors of cited_by pubs
+-p::
+  - PDFs: pdf file
+-o::
+  - PDF_OCR: text files
+-T::
+  - All possible options for a search
+
+Config File
+===========
+Rather than specifying command line options, you can create a yaml file with configuration
+settings.
+
+
+

@@ -65,7 +65,7 @@ class parse_xml:
     
     """
     def __init__(self, xml_text):
-        op = open(xml_text, "r").read()
+        op = open(xml_text,"r").read()
         self.soup = BeautifulStoneSoup(op)
 
     def xprint(self):

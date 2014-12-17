@@ -1,0 +1,9 @@
+
+def get_meta(file_input,search_type):
+    ids = get_ids(file_input, search_type)
+    urls = make_urls(ids, search_type)
+    xml_text = get_xml(ids)
+    save_url_
+    save_xml(xml_text,save_type)
+    
+    

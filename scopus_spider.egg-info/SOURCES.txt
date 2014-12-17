@@ -3,7 +3,12 @@ README.rst
 setup.py
 scopus_spider/__init__.py
 scopus_spider/command_line.py
+scopus_spider/data_tools.py
+scopus_spider/dir_creation.py
+scopus_spider/get.py
+scopus_spider/main.py
 scopus_spider/parsing.py
+scopus_spider/scrape.py
 scopus_spider.egg-info/PKG-INFO
 scopus_spider.egg-info/SOURCES.txt
 scopus_spider.egg-info/dependency_links.txt

@@ -16,57 +16,83 @@ from progressbar import ProgressBar
 import parsing
 
 def make_urls(ids, search_type):
-    if search_type == "pmid":
-        for id in ids:
-            url = "http://api.elsevier.com/content/search/index:SCOPUS?query=" + search_type + "(" + id + ")&field=doi,eid"
-            yield url
-
+    urls = {}
+    for id in ids:
+        urls["id"] = id
+        if search_type == "pmid":
+            urls["url"] = "http://api.elsevier.com/content/search/index:SCOPUS?query=" + search_type + "(" + id + ")&field=doi,eid"
             
-def get_xml(api_key, urls):    
+        if search_type == "auid":
+            urls["url"] = "http://api.elsevier.com/content/search/index:SCOPUS?query=" + "au-id" + "(" + id + ")" + "&count=200" + "&view(complete)" + "&field=author,eid,pubmed_id,afid"
+        # print urls
+        yield urls
+
+        
+def get_xml(api_key, urls, search_type):    
     headers = {'X-ELS-APIKey': api_key}
-    urls = list(urls)
-    print len(urls)
-    with ProgressBar(maxval=len(urls), redirect_stdout=True) as p:
-        for i, url in enumerate(urls):
-            print url
-            web = requests.get(url, headers=headers)
+    for url in urls:
+        print url
+        if search_type == "pmid":
+            web = requests.get(url["url"], headers=headers)
             try:
                 scopus_eid = web.json()['search-results']['entry'][0]['eid']
             except:
                 print("no eid in scopus database!\n")
-                print url
+                print url["url"]
                 next
             try:
                 scopus_abstract = web.json()['search-results']['entry'][0]['prism:url']
                 web_scopus = requests.get(scopus_abstract, headers=headers)
             except:
                 print("no scopus abstract for pmid!\n")
-                print url
+                print url["url"]
                 next
             xml_text = web_scopus.text
             output = {"scopus_eid":scopus_eid, 'scopus_abstract': scopus_abstract, 'xml_text':xml_text}
-            yield output
-            p.update(i)
 
+        if search_type == "auid":
+            headers = {'X-ELS-APIKey':api_key,"Accept":"application/xml"}
+            web = requests.get(url["url"], headers=headers)
+            if web.text is False:
+                print "No data on this author"
+                next
+            output = {"xml_text": web.text, "auid":url["id"]}
+
+        yield output
+        
             
 def save_xml(xml_text, search_type, search_option):
-    if search_option == "meta":
-        for xml_file in xml_text:
+    for xml_file in xml_text:
+        if search_option == "meta":
             # print xml_file["xml_text"].encode('utf8')
-            xml_out = data_tools.request_to_file(xml_file["xml_text"], xml_file["scopus_eid"], dir_creation.dir_raw_xml)
-            print xml_out
-            yield xml_out
+            xml_out = data_tools.request_to_file(xml_file["xml_text"],
+                                                 xml_file["scopus_eid"],
+                                                 dir_creation.dir_raw_xml)
 
-            
+        if search_option == "auid":
+            xml_out = {}
+            xml_out["id"] = xml_file["auid"]
+            xml_out["filename"] = data_tools.request_to_file(xml_file["xml_text"],
+                                                 xml_file["auid"],
+                                                 dir_creation.dir_raw_xml_coauthors)
+
+        print xml_out
+        yield xml_out
+
+                
 def get_data(xml_files, search_option):
     for file in xml_files:
-        parser = parsing.parse_xml(file)
+        parser = parsing.parse_xml(file["filename"])
         data = {}
         if search_option == "meta":
             data["meta_articles"] = parser.get_meta()
             data["meta_references"] = parser.get_references()
             data["meta_authors"] = parser.get_authors()
-            yield data
+
+        if search_option == "auid":
+            data["coauthors_2nd"] = parser.get_coauthors(file["auid"])
+
+        yield data
 
 def save_data(data, search_option):
     

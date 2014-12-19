@@ -136,7 +136,6 @@ reload(scrape)
 for url in ls_coauth:
     au_id = url
     url = "http://api.elsevier.com/content/search/index:SCOPUS?query=" + "au-id" + "(" + au_id + ")" + "&count=200" + "&view(complete)" + "&field=author,eid,pubmed_id,afid"
-
     xml_pmid = scrape.get_scopus_url(api_key,url)
   
     if xml_pmid.text is False:

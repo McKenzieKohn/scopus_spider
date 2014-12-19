@@ -65,7 +65,7 @@ class parse_xml:
     
     """
     def __init__(self, xml_text):
-        op = open(xml_text, "r").read()
+        op = open(xml_text,"r").read()
         self.soup = BeautifulStoneSoup(op)
 
     def xprint(self):
@@ -199,6 +199,55 @@ class parse_xml:
         #pdb.set_trace()
         return(d_refs)
 
+    def get_coauthors(self, primary_authid):
+        """ get references data 
+        """
+        try: 
+            entries = self.soup.find_all('entry')
+        except:
+            entries = None
+        ls_auths = list()
+        for entry in entries:
+            try:
+                eid = entry.find('eid').string
+            except:
+                eid = None
+            try:
+                pubmed_id = entry.find('pubmed-id').contents[0].encode('utf-8')
+            except:
+                pubmed_id = None
+            auths = entry.find_all('author')
+            for auth in auths:
+                d_auth = {}
+                d_auth['primary_authid'] = primary_authid
+                # d_auth['secondary_authid'] = secondary_authid
+                d_auth['eid'] = eid
+                d_auth['pubmed_id'] = pubmed_id
+                try:
+                    d_auth['author_id'] = auth.find('authid').string
+                except:
+                    d_auth['author_id'] = None
+                try:
+                    d_auth['author_name'] = auth.find('authname').string.encode('utf-8')
+                except:
+                    d_auth['author_name'] = None
+                try:
+                    d_auth['author_surname'] = auth.find('surname').string.encode('utf-8')
+                except:
+                    d_auth['author_surname'] = None
+                try:
+                    d_auth['author_given'] = auth.find('given-name').string.encode('utf-8')
+                except:
+                    d_auth['author_given'] = None
+                try:
+                    d_auth['author_aff_id'] = auth.find('afid').string
+                except:
+                    d_auth['author_aff_id'] = None
+                ls_auths.append(d_auth)
+                
+        return(ls_auths)
+
+    
     def get_authors2(self, primary_authid, secondary_authid):
         """ get references data 
         """

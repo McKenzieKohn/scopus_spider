@@ -78,8 +78,12 @@ def main(args=sys.argv):
         print("extracting metadata")
         output = get.get_meta(api_key, file_input, search_type)
     if opts['2nd_coauthors']:
-        print(opts['auth_id_search'])
+        search_option = "auid"
         print("extracting 2nd Level coauthors")
+        output = get.get_coauthors_2ndlevel(api_key,
+                                            file_input,
+                                            search_type,
+                                            search_option)
     if opts['references']:
         print(opts['auth_id_search'])
         print("extracting references")
